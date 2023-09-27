@@ -4,14 +4,39 @@ option java_multiple_files = true;
 
 package helloworld;
 
-service Hello {
-  rpc hello(HelloRequest) returns (HelloReply) {}
+service Bank {
+  rpc createAccount(createAccountRequest) returns createAccountReply {}
+  rpc deposit(depositRequest) returns DepositReply {}
 }
 
-message HelloRequest {
-  string who = 1;
+message createAccountRequest {
+  int32 balance = 1;
 }
 
-message HelloReply {
-  string greeting = 1;
+message accountID {
+  int32 accountID = 1;
+}
+
+message depositRequest {
+  int32 accountID = 1;
+  int32 value = 2;
+}
+
+message transaction {
+  int32 to = 1;
+  int32 from = 2;
+  int32 value = 3;
+  string date = 4;
+}
+
+message historyRequest {
+  accountID accountID = 1;
+  int32 page = 2;
+  int32 nResults = 3;
+}
+
+message historyReply {
+  repeated transaction transactions = 1;
+  int32 nResults = 2;
+  int32 nRemaining = 3;
 }
