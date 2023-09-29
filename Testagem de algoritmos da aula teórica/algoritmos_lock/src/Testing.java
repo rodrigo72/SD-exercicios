@@ -2,6 +2,7 @@ import Algorithms.BakeryAlgorithm;
 import Algorithms.FilterAlgorithm;
 import Algorithms.Lock;
 import Algorithms.PetersonAlgorithm;
+import Algorithms.Bakery;
 import Utils.BestCounter;
 import Utils.MyProcess;
 
@@ -10,7 +11,6 @@ public class Testing {
     private static final BestCounter counter = new BestCounter();
     public static void main(String[] args) {
         // Testing.testPetersonAlgorithm();
-        //Testing.testFilterAlgorithm();
         Testing.testBakeryAlgorithm();
     }
 
@@ -36,45 +36,24 @@ public class Testing {
         System.out.println("Expected value: " + expectedValue + "\nResult: " + counter.getValue());
     }
 
-    public static void testFilterAlgorithm() {
-        System.out.println("\nTesting Filter Algorithm:");
-
-        int numberOfProcesses = 5;
-        Lock filterAlgorithm = new FilterAlgorithm(numberOfProcesses);
-
-        counter.reset();
-        for (int i = 0; i < numberOfProcesses; i++) {
-            Thread processThread = new Thread(new MyProcess(filterAlgorithm, i, counter));
-            processThread.start();
-        }
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        int expectedValue = numberOfProcesses * counter.max;
-        System.out.println("Expected value: " + expectedValue + "\nResult: " + counter.getValue());
-    }
-
     public static void testBakeryAlgorithm() {
-        int numberOfProcesses = 3;
-        Lock bakeryAlgorithm = new BakeryAlgorithm(numberOfProcesses);
+        Bakery[] threads = new Bakery[Bakery.numberOfThreads];
 
-        counter.reset();
-        for (int i = 0; i < numberOfProcesses; i++) {
-            Thread processThread = new Thread(new MyProcess(bakeryAlgorithm, i, counter));
-            processThread.start();
+        for (int i = 0; i < threads.length; i++) {
+            threads[i] = new Bakery(i);
+            threads[i].start();
         }
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        // wait all threads to finish
+        for (Bakery thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
-        int expectedValue = numberOfProcesses * counter.max;
-        System.out.println("Expected value: " + expectedValue + "\nResult: " + counter.getValue());
+        System.out.println("\nCount is: " + Bakery.count);
+        System.out.println("\nExpected was: " + (Bakery.countToThis * Bakery.numberOfThreads));
     }
 }
