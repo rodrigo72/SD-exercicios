@@ -1,6 +1,8 @@
 package Algorithms;
 
-public class Bakery extends Thread implements Lock, Runnable {
+import static java.lang.Thread.sleep;
+
+public class Bakery implements Lock, Runnable {
 
     public int threadId;
     public static final int countToThis = 200;

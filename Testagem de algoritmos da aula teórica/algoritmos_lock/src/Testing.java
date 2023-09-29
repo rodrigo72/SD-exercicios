@@ -37,15 +37,15 @@ public class Testing {
     }
 
     public static void testBakeryAlgorithm() {
-        Bakery[] threads = new Bakery[Bakery.numberOfThreads];
+        Thread[] threads = new Thread[Bakery.numberOfThreads];
 
         for (int i = 0; i < threads.length; i++) {
-            threads[i] = new Bakery(i);
+            threads[i] = new Thread(new Bakery(i));
             threads[i].start();
         }
 
         // wait all threads to finish
-        for (Bakery thread : threads) {
+        for (Thread thread : threads) {
             try {
                 thread.join();
             } catch (InterruptedException e) {
